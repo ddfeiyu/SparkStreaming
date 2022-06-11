@@ -26,8 +26,11 @@ public class HBaseUtils {
 
     private HBaseUtils(){
         configuration=new Configuration();
-        configuration.set("hbase.rootdir","hdfs://hadoop-senior04.shinelon.com:8020/user/shinelon/hbase");
-        configuration.set("hbase.zookeeper.quorum","hadoop-senior04.shinelon.com");
+//        configuration.set("hbase.rootdir","hdfs://hadoop-senior04.shinelon.com:8020/user/shinelon/hbase");
+//        configuration.set("hbase.zookeeper.quorum","hadoop-senior04.shinelon.com");
+
+        configuration.set("hbase.rootdir","hdfs://master:9000/hbase");
+        configuration.set("hbase.zookeeper.quorum","master");
         try {
             hBaseAdmin = new HBaseAdmin(configuration);
         }catch (Exception e){

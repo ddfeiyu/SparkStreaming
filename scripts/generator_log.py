@@ -53,8 +53,8 @@ def sample_status():
     return random.sample(status,1)[0]
 
 def generator_log(count=10):
-    time_str=time.strftime("%Y-%m-%d %H:%M:%S",time.localtime())
-    f=open("/opt/project/data/access.log","w+")
+    time_str = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime())
+    f = open("/opt/project/data/access.log","w+")
     while count>=1:
         query_log="{ip}\t{time}\t\"GET /{url} HTTP/1.1\"\t{status}\t{referer}".format(time=time_str,url=sample_log(),ip=sample_ip(),referer=sample_references(),status=sample_status())
         f.write(query_log+"\n")

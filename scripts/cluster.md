@@ -7,9 +7,23 @@ bin/flume-ng agent \
 #kafka启动命令：
 bin/kafka-server-start.sh -daemon config/server.properties &
 
-bin/kafka-topics.sh --create --zookeeper hadoop-senior04.shinelon.com:2181 --replication-factor 1 --partitions 1 --topic Streaming
+bin/kafka-topics.sh --create --zookeeper master:2181 --replication-factor 1 --partitions 1 --topic Streaming
 
-bin/kafka-console-consumer.sh --zookeeper hadoop-senior04.shinelon.com:2181 --topic Streaming
+bin/kafka-console-consumer.sh --zookeeper master:2181 --topic Streaming
+
+
+2、创建topic
+kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1  --topic Streaming
+./bin/kafka-topics.sh --create --zookeeper master:2181 --replication-factor 1 --partitions 1  --topic Streaming
+
+6、查看topic情况
+kafka-topics.sh --describe --zookeeper localhost:2181 --topic Streaming
+./bin/kafka-topics.sh --describe --zookeeper master:2181 --topic Streaming
+
+3、发送消息
+【已验证OK】
+kafka-console-producer.sh --topic Streaming --bootstrap-server localhost:9092
+./bin/kafka-console-producer.sh --topic Streaming --bootstrap-server master:9092
 
 #Spark提交命令：
 bin/spark-shell --master local[2] --jars \

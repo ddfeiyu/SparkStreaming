@@ -17,9 +17,12 @@ public class HBaseUtils {
     private static HBaseUtils instance=null;
 
     private HBaseUtils(){
-        configuration=new Configuration();
-        configuration.set("hbase.rootdir","hdfs://hadoop-senior04.shinelon.com:8020/user/shinelon/hbase");
-        configuration.set("hbase.zookeeper.quorum","hadoop-senior04.shinelon.com");
+        configuration = new Configuration();
+        //configuration.set("hbase.rootdir","hdfs://hadoop-senior04.shinelon.com:8020/user/shinelon/hbase");
+        //configuration.set("hbase.zookeeper.quorum","hadoop-senior04.shinelon.com");
+
+        configuration.set("hbase.rootdir","hdfs://master:9000/hbase");
+        configuration.set("hbase.zookeeper.quorum","master");
         try {
             hBaseAdmin = new HBaseAdmin(configuration);
         }catch (Exception e){
@@ -28,8 +31,8 @@ public class HBaseUtils {
     }
 
     public static synchronized HBaseUtils getInstance(){
-        if(instance==null){
-            instance=new HBaseUtils();
+        if(instance == null){
+            instance = new HBaseUtils();
         }
         return instance;
     }
@@ -70,7 +73,8 @@ public class HBaseUtils {
     }
 
     public static void main(String[] args) {
-       HTable table= HBaseUtils.getInstance().getTable("course_clickcount");
+
+       HTable table= getInstance().getTable("course_clickcount");
 
         System.out.println(table.getName().getNameAsString());
     }

@@ -3,15 +3,32 @@
   <groupId>cn.just.shinelon</groupId>
   <artifactId>SparkSql_Proj</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <inceptionYear>2008</inceptionYear>
+  <inceptionYear>2018</inceptionYear>
+
+    <name>Sparing Streaming实时日志分析</name>
+
+<!--  <properties>-->
+<!--    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
+<!--    <flink.version>1.14.4</flink.version>-->
+<!--    <target.java.version>1.8</target.java.version>-->
+<!--    <scala.binary.version>2.11</scala.binary.version>-->
+<!--    <scala.version>2.11.12</scala.version>-->
+<!--    <log4j.version>2.17.1</log4j.version>-->
+<!--  </properties>-->
 
   <properties>
-    <scala.version>2.11.8</scala.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <target.java.version>1.8</target.java.version>
+<!--    <scala.version>2.11.8</scala.version>-->
+    <scala.version>2.11.12</scala.version>
     <kafka.version>0.9.0.0</kafka.version>
     <spark.version>2.2.0</spark.version>
     <hadoop.version>2.6.0-cdh5.7.0</hadoop.version>
     <hbase.version>1.2.0-cdh5.7.0</hbase.version>
+
+
   </properties>
+
 
   <!--添加cloudera的repository-->
   <repositories>
@@ -22,6 +39,13 @@
   </repositories>
 
   <dependencies>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.12.3</version>
+    </dependency>
+
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-library</artifactId>
@@ -121,19 +145,34 @@
       <version>1.6.0</version>
     </dependency>
 
+
   </dependencies>
 
 
   <build>
+
     <!--必须注释掉这一段，不然由于scala和java混编的会打包时会报错 -->
     <!--
     <sourceDirectory>src/main/scala</sourceDirectory>
     <testSourceDirectory>src/test/scala</testSourceDirectory>
     -->
     <plugins>
+      <!-- Java Compiler -->
       <plugin>
-        <groupId>org.scala-tools</groupId>
-        <artifactId>maven-scala-plugin</artifactId>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>${target.java.version}</source>
+          <target>${target.java.version}</target>
+        </configuration>
+      </plugin>
+
+      <!-- Scala Compiler -->
+      <plugin>
+        <groupId>net.alchim31.maven</groupId>
+        <artifactId>scala-maven-plugin</artifactId>
+        <version>3.2.2</version>
         <executions>
           <execution>
             <goals>
@@ -143,40 +182,67 @@
           </execution>
         </executions>
         <configuration>
-          <scalaVersion>${scala.version}</scalaVersion>
           <args>
-            <arg>-target:jvm-1.5</arg>
+            <arg>-nobootcp</arg>
+            <arg>-target:jvm-${target.java.version}</arg>
           </args>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-eclipse-plugin</artifactId>
-        <configuration>
-          <downloadSources>true</downloadSources>
-          <buildcommands>
-            <buildcommand>ch.epfl.lamp.sdt.core.scalabuilder</buildcommand>
-          </buildcommands>
-          <additionalProjectnatures>
-            <projectnature>ch.epfl.lamp.sdt.core.scalanature</projectnature>
-          </additionalProjectnatures>
-          <classpathContainers>
-            <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER</classpathContainer>
-            <classpathContainer>ch.epfl.lamp.sdt.launching.SCALA_CONTAINER</classpathContainer>
-          </classpathContainers>
-        </configuration>
-      </plugin>
+
+
+<!--     FIXME 临时去掉 <plugin>-->
+<!--        <groupId>org.scala-tools</groupId>-->
+<!--        <artifactId>maven-scala-plugin</artifactId>-->
+<!--        <version>${scala.version}</version>-->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <goals>-->
+<!--              <goal>compile</goal>-->
+<!--              <goal>testCompile</goal>-->
+<!--            </goals>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--        <configuration>-->
+<!--          <scalaVersion>${scala.version}</scalaVersion>-->
+<!--          <args>-->
+<!--            <arg>-target:jvm-1.5</arg>-->
+<!--          </args>-->
+<!--        </configuration>-->
+<!--      </plugin>-->
+<!--      -->
+
+<!--      <plugin>-->
+<!--        <groupId>org.apache.maven.plugins</groupId>-->
+<!--        <artifactId>maven-eclipse-plugin</artifactId>-->
+<!--        <configuration>-->
+<!--          <downloadSources>true</downloadSources>-->
+<!--          <buildcommands>-->
+<!--            <buildcommand>ch.epfl.lamp.sdt.core.scalabuilder</buildcommand>-->
+<!--          </buildcommands>-->
+<!--          <additionalProjectnatures>-->
+<!--            <projectnature>ch.epfl.lamp.sdt.core.scalanature</projectnature>-->
+<!--          </additionalProjectnatures>-->
+<!--          <classpathContainers>-->
+<!--            <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER</classpathContainer>-->
+<!--            <classpathContainer>ch.epfl.lamp.sdt.launching.SCALA_CONTAINER</classpathContainer>-->
+<!--          </classpathContainers>-->
+<!--        </configuration>-->
+<!--      </plugin>-->
+
     </plugins>
   </build>
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.scala-tools</groupId>
-        <artifactId>maven-scala-plugin</artifactId>
-        <configuration>
-          <scalaVersion>${scala.version}</scalaVersion>
-        </configuration>
-      </plugin>
-    </plugins>
-  </reporting>
+
+
+<!-- FIXME 临时去掉 <reporting>-->
+<!--    <plugins>-->
+<!--      <plugin>-->
+<!--        <groupId>org.scala-tools</groupId>-->
+<!--        <artifactId>maven-scala-plugin</artifactId>-->
+<!--        <configuration>-->
+<!--          <scalaVersion>${scala.version}</scalaVersion>-->
+<!--        </configuration>-->
+<!--      </plugin>-->
+<!--    </plugins>-->
+<!--  </reporting>-->
+
 </project>

@@ -33,10 +33,10 @@ object ForeachRDDWordCount {
 
     results.foreachRDD(rdd=>{
       rdd.foreachPartition(partitions=>{
-        val connection=createConnection()
+        val connection = createConnection()
         partitions.foreach(records=>{
-          val select="select word from wordcount where word='"+records._1+"'"
-          val wordIsExist=connection.createStatement().executeQuery(select)
+          val select = "select word from wordcount where word='"+records._1+"'"
+          val wordIsExist = connection.createStatement().executeQuery(select)
           //如果数据库中已经存在该数据，更新count
           if(wordIsExist.next()){
             val updateCount="update wordcount set count=("+records._2+"+count) where word='"+records._1+"'"

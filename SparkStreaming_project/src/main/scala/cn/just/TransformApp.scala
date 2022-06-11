@@ -24,9 +24,9 @@ object TransformApp {
       */
     val blacks=List("jack","leo")
     //转换为RDD   jack=>(jack,true)
-    val blacksRDD=ssc.sparkContext.parallelize(blacks).map(x=>(x,true))
+    val blacksRDD = ssc.sparkContext.parallelize(blacks).map(x=>(x,true))
     //2018722,shinelon=>shienlon,[2018722,shinelon]
-    val checkLog=lines.map(x=>(x.split(",")(1),x)).transform(rdd=>{
+    val checkLog = lines.map(x=>(x.split(",")(1),x)).transform(rdd=>{
       rdd.leftOuterJoin(blacksRDD).
         filter(x=>x._2._2.getOrElse(false)!=true)    //不是黑名单的成员留下
         .map(name=>name._2._1)
